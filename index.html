@@ -5,9 +5,37 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>chips_configurator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900" rel="stylesheet">
   </head>
   <body>
     <div id="app"></div>
+    <div class="configurator">
+      <h1>Chips Configurator</h1>
+      <div class="settings">
+        <div class="setting">
+          <label for="name">Name</label>
+          <input type="text" id="name" />
+        </div>
+        <div class="setting">
+          <label for="font">Font</label>
+          <select id="font">
+            <option class="montserrat" value="Montserrat">Montserrat</option>
+            <option class="arial" value="Arial">Arial</option>
+            <option class="times-new-roman" value="Times New Roman">Times New Roman</option>
+          </select>
+        </div>  
+        <div class="setting">
+          <label for="color">Color</label>
+          <input type="color" id="color" value="#ff0000"/>
+        </div> 
+        <div class="setting">
+          <label for="flavors">Flavor(s)</label>
+          <textarea name="flavors" id="flavors" placeholder="Eg: salt, pepper, onions"></textarea>
+        </div>     
+      </div>
+    </div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
