@@ -2,6 +2,7 @@ import './style.css'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
 
 
 const sizes = {
@@ -45,12 +46,24 @@ scene.add(light);
 const directionalLight = new THREE.DirectionalLight( 0xffffff, 3 );
 scene.add( directionalLight );
 
+const hdrLoader = new HDRLoader();
+hdrLoader.load('/assets/bg.hdr', function(texture) {
+  texture.mapping = THREE.EquirectangularReflectionMapping;
+  scene.background = texture;
+  scene.environment = texture;
+});
+
 const canvas = document.querySelector(".webgl");
 const renderer = canvas ? new THREE.WebGLRenderer({canvas}) : new THREE.WebGLRenderer();
 renderer.setSize( sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setAnimationLoop( animate );
 if (!canvas) document.body.appendChild( renderer.domElement );
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
 const controls = new OrbitControls( camera, canvas || renderer.domElement );
 controls.enableDamping = true;
 controls.enablePan = false;
@@ -59,7 +72,27 @@ controls.maxPolarAngle = Math.PI * 0.55;
 controls.minDistance = 1.2;
 controls.maxDistance = 5;
 
-const gltfLoader = new GLTFLoader();
+const loadingManager = new THREE.LoadingManager();
+const loadingOverlay = document.createElement('div');
+loadingOverlay.style.position = 'fixed';
+loadingOverlay.style.zIndex = '9999';
+loadingOverlay.style.top = '0';
+loadingOverlay.style.left = '0';
+loadingOverlay.style.width = '100%';
+loadingOverlay.style.height = '100%';
+loadingOverlay.style.backgroundColor = '#fcd703';
+loadingOverlay.style.color = 'black';
+loadingOverlay.style.display = 'flex';
+loadingOverlay.style.alignItems = 'center';
+loadingOverlay.style.justifyContent = 'center';
+loadingOverlay.innerText = 'Finding Chips...';
+document.body.appendChild(loadingOverlay);
+
+loadingManager.onLoad = () => {
+  loadingOverlay.style.display = 'none';
+};
+
+const gltfLoader = new GLTFLoader(loadingManager);
 gltfLoader.load('/assets/chips_bag/scene.gltf', (gltf)=>{
   model = gltf.scene;
   model.traverse((child) => {
