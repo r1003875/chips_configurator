@@ -16,7 +16,7 @@ let model = null;
 const updateChipsColor = (newColor) => {
   chipsColor = new THREE.Color(newColor);
   lighter = chipsColor.clone().lerp(new THREE.Color("white"), 0.6);
-  scene.background = new THREE.Color(lighter);
+  plate.material.color = new THREE.Color(lighter);
   if (model) {
     model.traverse((child) => {
       if (child.isMesh) {
@@ -34,7 +34,6 @@ colorInput.addEventListener("input", (e)=>{
 let lighter = chipsColor.clone().lerp(new THREE.Color("white"), 0.6);
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(lighter);
 
 const camera = new THREE.PerspectiveCamera( 75, sizes.width / sizes.height, 0.1, 1000 );
 scene.add( camera );
