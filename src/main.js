@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
+import { GUI } from 'dat.gui';
 
 
 const sizes = {
@@ -105,6 +106,14 @@ gltfLoader.load('/assets/chips_bag/scene.gltf', (gltf)=>{
   scene.add(model);
   camera.position.set(0,1,2);
 });
+
+const gui = new GUI();
+
+const plateFolder = gui.addFolder('Plate');
+plateFolder.add(plate.position, 'x', -10, 10);
+plateFolder.add(plate.position, 'y', -10, 10);
+plateFolder.add(plate.position, 'z', -10, 10);
+plateFolder.open();
 
 const updateChipsColor = (newColor) => {
   chipsColor = new THREE.Color(newColor);
