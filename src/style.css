@@ -4,6 +4,11 @@ body{
   font-family: 'Montserrat', sans-serif;
 }
 
+h2, h3 {
+  margin: 0;
+  margin-top: 1rem;
+}
+
 .configurator {
   position: absolute;
   top: 5vh;
@@ -42,3 +47,53 @@ select{
 .times-new-roman {
   font-family: 'Times New Roman', serif;
 } 
+
+.btn_container {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  background-color: #f8e503;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 1rem;
+  border-radius: 4px;
+}
+
+.submit_btn {
+  width: 100%;
+}
+
+.reset_btn {
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ec2e2e;
+}
+
+.reset_btn img {
+  width: 100%;
+  height: 100%;
+}
+
+input[type="text"]{
+  height: 1.5rem;
+}
+
+input[type="color"]{
+  padding: 0;
+  border: none;
+  background-color: transparent;
+  width: 2.5rem;
+  height: 2.5rem;
+  cursor: pointer;
+}
+
+textarea{
+  resize: none;
+  height: 4rem;
+}
