@@ -13,19 +13,6 @@ const sizes = {
 let chipsColor = new THREE.Color("#ffffff");
 let model = null;
 
-const updateChipsColor = (newColor) => {
-  chipsColor = new THREE.Color(newColor);
-  lighter = chipsColor.clone().lerp(new THREE.Color("white"), 0.6);
-  plate.material.color = new THREE.Color(lighter);
-  if (model) {
-    model.traverse((child) => {
-      if (child.isMesh) {
-        child.material.color.copy(chipsColor);
-      }
-    });
-  }
-};
-
 let colorInput = document.querySelector("#color");
 colorInput.addEventListener("input", (e)=>{
     updateChipsColor(e.target.value);
@@ -51,6 +38,8 @@ hdrLoader.load('/assets/bg.hdr', function(texture) {
   scene.background = texture;
   scene.environment = texture;
 });
+
+light.intensity = 2;
 
 const canvas = document.querySelector(".webgl");
 const renderer = canvas ? new THREE.WebGLRenderer({canvas}) : new THREE.WebGLRenderer();
@@ -91,6 +80,14 @@ loadingManager.onLoad = () => {
   loadingOverlay.style.display = 'none';
 };
 
+const plateGeometry = new THREE.CircleGeometry(1.5,32);
+const plateMaterial = new THREE.MeshStandardMaterial({color: 0xffffff, metalness: 0.2, roughness: 0.4});
+const plate = new THREE.Mesh(plateGeometry, plateMaterial);
+plate.position.set(0,-1,0);
+plate.rotation.x = - Math.PI / 2;
+plate.receiveShadow = true;
+scene.add(plate);
+
 const gltfLoader = new GLTFLoader(loadingManager);
 gltfLoader.load('/assets/chips_bag/scene.gltf', (gltf)=>{
   model = gltf.scene;
@@ -109,13 +106,18 @@ gltfLoader.load('/assets/chips_bag/scene.gltf', (gltf)=>{
   camera.position.set(0,1,2);
 });
 
-const plateGeometry = new THREE.CircleGeometry(1.5,32);
-const plateMaterial = new THREE.MeshStandardMaterial({color: 0xb0b0b0, metalness: 0.2, roughness: 0.4});
-const plate = new THREE.Mesh(plateGeometry, plateMaterial);
-plate.position.set(0,-1,0);
-plate.rotation.x = - Math.PI / 2;
-plate.receiveShadow = true;
-scene.add(plate);
+const updateChipsColor = (newColor) => {
+  chipsColor = new THREE.Color(newColor);
+  lighter = chipsColor.clone().lerp(new THREE.Color("white"), 0.2);
+  plate.material.color.copy(lighter);
+  if (model) {
+    model.traverse((child) => {
+      if (child.isMesh) {
+        child.material.color.copy(chipsColor);
+      }
+    });
+  }
+};
 
 function animate() {
   renderer.render( scene, camera );
