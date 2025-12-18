@@ -11,14 +11,14 @@ h2, h3 {
 
 .configurator {
   position: absolute;
-  bottom: 5vh;
+  top: 5vh;
   right: 5vh;
   z-index: 1;
   background-color: white;
   padding: 5vh;
   border-radius: 8px;
   border: 4px solid #f8e503;
-  height: 60vh;
+  height: 80vh;
 }
 
 .settings{

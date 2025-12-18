@@ -56,7 +56,7 @@ window.addEventListener('resize', () => {
 const controls = new OrbitControls( camera, canvas || renderer.domElement );
 controls.enableDamping = true;
 controls.enablePan = false;
-controls.minPolarAngle = Math.PI * 0.25;  
+controls.minPolarAngle = Math.PI * 0.35;  
 controls.maxPolarAngle = Math.PI * 0.55; 
 controls.minDistance = 1.2;
 controls.maxDistance = 5;
@@ -89,7 +89,7 @@ plate.rotation.x = - Math.PI / 2;
 plate.receiveShadow = true;
 scene.add(plate);
 
-const gltfLoader = new GLTFLoader(loadingManager);
+const gltfLoader = new GLTFLoader(loadingManager);/*
 gltfLoader.load('/assets/chips_bag/scene.gltf', (gltf)=>{
   model = gltf.scene;
   model.traverse((child) => {
@@ -105,9 +105,21 @@ gltfLoader.load('/assets/chips_bag/scene.gltf', (gltf)=>{
   model.castShadow = true;
   scene.add(model);
   camera.position.set(0,1,2);
+});*/
+gltfLoader.load('/assets/chips_arthur_de_klerck.glb', (gltf)=>{
+  model = gltf.scene;
+  model.scale.set(0.5,0.5,0.5);
+  model.position.set(0,0,0);
+  model.rotation.y = Math.PI / 4;
+  scene.add(model);
+  console.log(model);
 });
 
 const gui = new GUI();
+gui.domElement.style.position = 'absolute';
+gui.domElement.style.top = '10px';
+gui.domElement.style.left = '10px';
+gui.close();
 
 const plateFolder = gui.addFolder('Plate');
 plateFolder.add(plate.position, 'x', -10, 10);
