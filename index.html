@@ -14,32 +14,38 @@
     <div class="configurator">
       <h1>Chips Configurator</h1>
       <div class="settings">
-        <div class="setting">
-          <label for="name">Name</label>
-          <input type="text" id="name" />
-        </div>
-        <div class="setting">
-          <label for="font">Font</label>
-          <select id="font">
-            <option class="montserrat" value="Montserrat">Montserrat</option>
-            <option class="arial" value="Arial">Arial</option>
-            <option class="times-new-roman" value="Times New Roman">Times New Roman</option>
-          </select>
-        </div>  
-        <div class="setting">
-          <label for="color">Color</label>
-          <input type="color" id="color" value="#ffffff"/>
-        </div> 
-        <div class="setting">
-          <label for="flavors">Flavor(s)</label>
-          <textarea name="flavors" id="flavors" placeholder="Eg: salt, pepper, onions"></textarea>
-        </div>     
-      </div>
-      <h3>Ready to launch?</h3>
-      <div class="btn_container">
-        <div class="reset_btn btn" title="Reset"><img src="public/assets/reset.svg" alt="reset"></div>
-        <button class="submit_btn btn">Submit</button>
-      </div>
+        <form id="configurator_form">
+            <div class="setting">
+              <label for="name">Name</label>
+              <input type="text" id="name" required/>
+            </div>
+            <div class="setting">
+              <label for="font">Font</label>
+              <select id="font" required>
+                <option class="montserrat" value="Montserrat">Montserrat</option>
+                <option class="arial" value="Arial">Arial</option>
+                <option class="times-new-roman" value="Times New Roman">Times New Roman</option>
+              </select>
+            </div>  
+            <div class="setting">
+              <label for="color">Color</label>
+              <input type="color" id="color" value="#ffffff" required/>
+            </div> 
+            <div class="setting">
+              <label for="image">Image</label>
+              <input type="file" id="image" required/>
+            </div>
+            <div class="setting">
+              <label for="flavours">Flavour(s)</label>
+              <textarea name="flavours" id="flavours" placeholder="Eg: salt, pepper, onions" required></textarea>
+            </div>     
+          </div>
+          <h3>Ready to launch?</h3>
+          <div class="btn_container">
+            <div class="reset_btn btn" title="Reset"><img src="public/assets/reset.svg" alt="reset"></div>
+            <button type="submit" class="submit_btn btn">Submit</button>
+          </div>
+      </form>
     </div>
     <script type="module" src="/src/main.js"></script>
   </body>

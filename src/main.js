@@ -4,7 +4,8 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
 import { GUI } from 'dat.gui';
-
+import { DecalGeometry } from 'three/addons/geometries/DecalGeometry.js';
+import { add } from 'three/tsl';
 
 const sizes = {
   width: window.innerWidth,
@@ -13,6 +14,7 @@ const sizes = {
 
 let chipsColor = new THREE.Color("#ffffff");
 let model = null;
+let targetMesh = null;
 
 let colorInput = document.querySelector("#color");
 colorInput.addEventListener("input", (e)=>{
@@ -89,10 +91,49 @@ plate.rotation.x = - Math.PI / 2;
 plate.receiveShadow = true;
 scene.add(plate);
 
-const gltfLoader = new GLTFLoader(loadingManager);/*
+const logo = new THREE.TextureLoader().load('/assets/Lays-Logo.png');
+const gltfLoader = new GLTFLoader(loadingManager);
+
+gltfLoader.load('/assets/chips_bag/scene.gltf', (gltf) => {
+  model = gltf.scene;
+
+  // Kies expliciet één van de twee meshes
+  // (Gebruik .getObjectByName als de naam exact is)
+  targetMesh = model.getObjectByName('Plane_Material001_0') 
+            || model.getObjectByName('Plane_Material001_0_1');
+
+  // Als je niet zeker bent welke de zak is, log ze:
+  model.traverse((o) => {
+    if (o.isMesh) console.log('Mesh:', o.name, o);
+  });
+
+  // Laat bestaande textures ongemoeid; kleur alleen “texture-loze” onderdelen
+  model.traverse((child) => {
+    if (child.isMesh) {
+        child.material = new THREE.MeshStandardMaterial({
+            color: chipsColor, 
+            metalness: 0.7, 
+            roughness: 0.5
+        });
+    }
+  });
+
+  model.scale.set(0.5, 0.5, 0.5);
+  model.castShadow = true;
+  scene.add(model);
+  camera.position.set(0, 1, 2);
+
+  // Plaats het decal op de voorkant (Variant B)
+  addFrontDecal(targetMesh, logo);
+});
+
+/*
 gltfLoader.load('/assets/chips_bag/scene.gltf', (gltf)=>{
   model = gltf.scene;
   model.traverse((child) => {
+    if(child.isMesh && !targetMesh) {
+      targetMesh = child;
+    }
     if (child.isMesh) {
         child.material = new THREE.MeshStandardMaterial({
             color: chipsColor, 
@@ -105,15 +146,21 @@ gltfLoader.load('/assets/chips_bag/scene.gltf', (gltf)=>{
   model.castShadow = true;
   scene.add(model);
   camera.position.set(0,1,2);
-});*/
+  addFrontDecal(targetMesh, logo);
+  model.traverse(o => console.log(o.type, o.name))
+});
+*/
+
+/*
 gltfLoader.load('/assets/chips_arthur_de_klerck.glb', (gltf)=>{
   model = gltf.scene;
   model.scale.set(0.5,0.5,0.5);
   model.position.set(0,0,0);
   model.rotation.y = Math.PI / 4;
   scene.add(model);
-  console.log(model);
-});
+  console.log(model)
+  console.log(model.children[0].material)
+});*/
 
 const gui = new GUI();
 gui.domElement.style.position = 'absolute';
@@ -133,8 +180,12 @@ const updateChipsColor = (newColor) => {
   plate.material.color.copy(lighter);
   if (model) {
     model.traverse((child) => {
-      if (child.isMesh) {
-        child.material.color.copy(chipsColor);
+      if (child.isMesh && child.material) {
+        const isDecal = child.material.map === logo;
+        const hasTexture = !!child.material.map;
+        if (!isDecal && !hasTexture && child.material.color) {
+          child.material.color.copy(chipsColor);
+        }
       }
     });
   }
@@ -144,3 +195,77 @@ function animate() {
   renderer.render( scene, camera );
   controls.update();
 }
+
+
+function addFrontDecal() {
+  if (!targetMesh) return;
+
+  // Bepaal een positie roughly aan de voorkant:
+  const box = new THREE.Box3().setFromObject(targetMesh);
+  const center = box.getCenter(new THREE.Vector3());
+  const zFront = (box.max.z + box.min.z) / 2; // alternatief: box.max.z
+  const position = new THREE.Vector3(center.x, center.y, zFront);
+
+  // Laat het logo naar buiten wijzen (Z-as)
+  const normal = new THREE.Vector3(0, 0, 1);
+  const orientation = new THREE.Euler()
+    .setFromQuaternion(new THREE.Quaternion()
+    .setFromUnitVectors(new THREE.Vector3(0, 0, 1), normal));
+
+  const size = new THREE.Vector3(0.25, 0.15, 0.02);
+
+  const geom = new DecalGeometry(targetMesh, position, orientation, size);
+  const mat = new THREE.MeshBasicMaterial({
+    map: logo,
+    transparent: true,
+    depthTest: true,
+    depthWrite: false,
+    polygonOffset: true,
+    polygonOffsetFactor: -0.1
+  });
+
+  const decal = new THREE.Mesh(geom, mat);
+  scene.add(decal);
+}
+
+const form = document.querySelector("#configurator_form");
+form.addEventListener("submit", async (e)=>{
+    e.preventDefault();
+
+    const name = document.querySelector("#name").value;
+    const font = document.querySelector("#font").value;
+    const color = document.querySelector("#color").value;
+    const imageInput = document.querySelector("#image").files[0].name;
+    const flavours = document.querySelector("#flavours").value.split(',').map(f => f.trim());
+/*
+    const payload = {
+        name: name,
+        font: font,
+        color: color,
+        keyFlavours: flavours,
+        image: imageInput,
+        user: "69591cc01c1b4e01957eb959" // Voorbeeld user ID
+    }*/
+
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("font", font);
+    formData.append("color", color);
+    formData.append("keyFlavours", JSON.stringify(flavours));
+    if (imageInput) {
+      formData.append("image", imageInput);
+    }
+    formData.append("user", "69591cc01c1b4e01957eb959"); // Voorbeeld user ID
+
+    try {
+      const response = await fetch("http://localhost:3000/api/v1/bags", {
+        method: "POST",
+        body: formData
+      });
+
+    const result = await response.json();
+    console.log("Success:", result);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
+});
