@@ -5,7 +5,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
 import { GUI } from 'dat.gui';
 import { DecalGeometry } from 'three/addons/geometries/DecalGeometry.js';
-import { add } from 'three/tsl';
+import { add, sub } from 'three/tsl';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -279,4 +279,22 @@ form.addEventListener("submit", async (e)=>{
     } catch (error) {
       console.error("Error submitting form:", error);
     }
+    // change submit button to "Submitted!" for 2 seconds
+    const submitBtn = document.querySelector(".submit_btn");
+    const continueBtn = document.querySelector(".continue_btn");
+    continueBtn.classList.remove("hidden");
+    continueBtn.addEventListener("click", ()=>{
+        window.location.href = `${dashboardURL}/voting`;
+    });
+    submitBtn.innerText = "Submitted!";
+    submitBtn.disabled = true;
+    submitBtn.classList.add("submitted");
 });
+
+function reset(){
+    document.querySelector("#configurator_form").reset();
+    updateChipsColor("#ffffff");
+}
+
+const resetBtn = document.querySelector(".reset_btn");
+resetBtn.addEventListener("click", reset);

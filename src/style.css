@@ -97,3 +97,17 @@ textarea{
   resize: none;
   height: 4rem;
 }
+
+.submitted {
+  background-color: rgb(0, 168, 8);
+  color: white;
+  cursor: not-allowed;
+}
+
+
+
+
+
+.hidden {
+  display: none;
+}
