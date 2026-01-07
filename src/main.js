@@ -9,6 +9,15 @@ import { add } from 'three/tsl';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
+const urlParams = new URLSearchParams(window.location.search);
+const token = urlParams.get("token");
+const dashboardURL = import.meta.env.VITE_DASHBOARD_URL;
+
+if (!token) {
+  window.location.href = `${dashboardURL}/login`;
+}
+
+
 const sizes = {
   width: window.innerWidth,
   height: window.innerHeight
