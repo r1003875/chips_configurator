@@ -7,6 +7,8 @@ import { GUI } from 'dat.gui';
 import { DecalGeometry } from 'three/addons/geometries/DecalGeometry.js';
 import { add } from 'three/tsl';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const sizes = {
   width: window.innerWidth,
   height: window.innerHeight
@@ -235,7 +237,7 @@ form.addEventListener("submit", async (e)=>{
     const name = document.querySelector("#name").value;
     const font = document.querySelector("#font").value;
     const color = document.querySelector("#color").value;
-    const imageInput = document.querySelector("#image").files[0].name;
+    const imageInput = document.querySelector("#image").files[0];
     const flavours = document.querySelector("#flavours").value.split(',').map(f => f.trim());
 /*
     const payload = {
@@ -258,7 +260,7 @@ form.addEventListener("submit", async (e)=>{
     formData.append("user", "69591cc01c1b4e01957eb959"); // Voorbeeld user ID
 
     try {
-      const response = await fetch("http://localhost:3000/api/v1/bags", {
+      const response = await fetch(`${API_URL}/bags`, {
         method: "POST",
         body: formData
       });
