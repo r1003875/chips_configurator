@@ -14,7 +14,7 @@ const token = urlParams.get("token");
 const dashboardURL = import.meta.env.VITE_DASHBOARD_URL;
 
 if (!token) {
-  window.location.href = `${dashboardURL}/login`;
+  window.location.href = `${dashboardURL}`;
 }
 
 
