@@ -290,7 +290,7 @@ form.addEventListener("submit", async (e)=>{
     const continueBtn = document.querySelector(".continue_btn");
     continueBtn.classList.remove("hidden");
     continueBtn.addEventListener("click", ()=>{
-        window.location.href = `${dashboardURL}/voting?token=${token}`;
+        window.location.href = `${dashboardURL}`;
     });
     submitBtn.innerText = "Submitted!";
     submitBtn.disabled = true;
