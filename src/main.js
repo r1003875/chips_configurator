@@ -8,7 +8,7 @@ import { DecalGeometry } from 'three/addons/geometries/DecalGeometry.js';
 import { add, sub } from 'three/tsl';
 
 const API_URL = import.meta.env.VITE_API_URL;
-
+console.log("API URL:", API_URL);
 const urlParams = new URLSearchParams(window.location.search);
 const token = urlParams.get("token");
 const dashboardURL = import.meta.env.VITE_DASHBOARD_URL;
@@ -275,7 +275,6 @@ form.addEventListener("submit", async (e)=>{
     } catch (error) {
       console.error("Error submitting form:", error);
     }
-    // change submit button to "Submitted!" for 2 seconds
     const submitBtn = document.querySelector(".submit_btn");
     const continueBtn = document.querySelector(".continue_btn");
     continueBtn.classList.remove("hidden");
