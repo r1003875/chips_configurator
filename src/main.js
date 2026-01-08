@@ -248,6 +248,9 @@ form.addEventListener("submit", async (e)=>{
     const color = document.querySelector("#color").value;
     const imageInput = document.querySelector("#image").files[0];
     const flavours = document.querySelector("#flavours").value.split(',').map(f => f.trim());
+    renderer.render(scene, camera);
+    const screenshotDataUrl = renderer.domElement.toDataURL("image/png");
+    const screenshotFile = dataURLtoFile(screenshotDataUrl, "bag-preview.png");
 /*
     const payload = {
         name: name,
@@ -267,7 +270,7 @@ form.addEventListener("submit", async (e)=>{
       formData.append("image", imageInput);
     }
     formData.append("user", "69591cc01c1b4e01957eb959"); // Voorbeeld user ID
-
+    formData.append("screenshot", screenshotFile);
     try {
       const response = await fetch(`${API_URL}/bags`, {
         method: "POST",
@@ -298,3 +301,17 @@ function reset(){
 
 const resetBtn = document.querySelector(".reset_btn");
 resetBtn.addEventListener("click", reset);
+
+function dataURLtoFile(dataUrl, filename) {
+  const arr = dataUrl.split(",");
+  const mime = arr[0].match(/:(.*?);/)[1];
+  const bstr = atob(arr[1]);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
+
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+
+  return new File([u8arr], filename, { type: mime });
+}
