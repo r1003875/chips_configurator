@@ -8,13 +8,13 @@ import { DecalGeometry } from 'three/addons/geometries/DecalGeometry.js';
 import { add, sub } from 'three/tsl';
 
 const API_URL = import.meta.env.VITE_API_URL;
-console.log("API URL:", API_URL);
+
 const urlParams = new URLSearchParams(window.location.search);
 const token = urlParams.get("token");
 const dashboardURL = import.meta.env.VITE_DASHBOARD_URL;
 
 if (!token) {
-  window.location.href = `${dashboardURL}`;
+  window.location.href = `${dashboardURL}/login`;
 }
 
 
@@ -279,7 +279,7 @@ form.addEventListener("submit", async (e)=>{
     const continueBtn = document.querySelector(".continue_btn");
     continueBtn.classList.remove("hidden");
     continueBtn.addEventListener("click", ()=>{
-        window.location.href = `${dashboardURL}`;
+        window.location.href = `${dashboardURL}/voting?token=${token}`;
     });
     submitBtn.innerText = "Submitted!";
     submitBtn.disabled = true;
