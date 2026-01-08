@@ -274,6 +274,9 @@ form.addEventListener("submit", async (e)=>{
     try {
       const response = await fetch(`${API_URL}/bags`, {
         method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        },
         body: formData
       });
 
