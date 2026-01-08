@@ -251,15 +251,6 @@ form.addEventListener("submit", async (e)=>{
     renderer.render(scene, camera);
     const screenshotDataUrl = renderer.domElement.toDataURL("image/png");
     const screenshotFile = dataURLtoFile(screenshotDataUrl, "bag-preview.png");
-/*
-    const payload = {
-        name: name,
-        font: font,
-        color: color,
-        keyFlavours: flavours,
-        image: imageInput,
-        user: "69591cc01c1b4e01957eb959" // Voorbeeld user ID
-    }*/
 
     const formData = new FormData();
     formData.append("name", name);
@@ -269,7 +260,6 @@ form.addEventListener("submit", async (e)=>{
     if (imageInput) {
       formData.append("image", imageInput);
     }
-    formData.append("user", "69591cc01c1b4e01957eb959"); // Voorbeeld user ID
     formData.append("screenshot", screenshotFile);
     try {
       const response = await fetch(`${API_URL}/bags`, {
